@@ -235,7 +235,7 @@ If something on this website is hard to use, or you need information in another 
     items: [
       { label: 'Home', href: '/', children: [] as string[] },
       { label: 'About', href: '/about', children: ['About CIASO | /about | Who we are and what we stand for', 'FAQ | /faq | Common questions, answered', 'Testimonial | /testimonial | #FromHereToThrive stories'] },
-      { label: 'Services', href: '/services', children: ['All services | /services | Five pillars of support', 'Settle | /services#settle', 'Work | /services#work', 'Grow | /services#grow', 'Belong | /services#belong', 'Thrive | /services#thrive', 'Your CIASO Journey | /services#journey'] },
+      { label: 'Services', href: '/services', children: [] as string[] },
       { label: 'Volunteer', href: '/volunteer', children: [] as string[] },
       { label: 'Workshop', href: '/workshop', children: [] as string[] },
       { label: 'Events', href: '/events', children: ['Current events | /events | Upcoming workshops and events', 'Past events | /events/past | Recaps and earlier sessions'] },

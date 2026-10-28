@@ -17,34 +17,36 @@ export default async function ServicesPage() {
         <div className="btn-row"><Link className="btn btn--primary" href="/get-support">Get Support</Link></div>
       </PageHeader>
 
-      <nav className="pillar-nav" aria-label="Service pillars">
+      {/* All services on one structured panel: one row per pillar */}
+      <section className="section" aria-labelledby="services-title">
         <div className="container">
-          <ul>
-            {pillars.map((p) => <li key={p.key}><a href={`#${p.key}`}><Icon name={p.icon} />{p.name}</a></li>)}
-            <li><a href="#journey"><Icon name="arrow" />Journey</a></li>
-          </ul>
-        </div>
-      </nav>
-
-      {c.pillars.intro && <div className="container"><p className="lead" style={{ marginTop: '2rem' }}>{c.pillars.intro}</p></div>}
-
-      {pillars.map((p, i) => (
-        <section key={p.key} className="pillar-section" id={p.key} aria-labelledby={`${p.key}-title`}>
-          <div className="container pillar-row">
-            <div className="reveal reveal--left">
-              <span className="pillar__icon pillar__icon--lg"><Icon name={p.icon} /></span>
-              <p className="eyebrow">0{i + 1}</p>
-              <h2 id={`${p.key}-title`}>{p.name}</h2>
-            </div>
-            <ul className="service-list" role="list">
-              {p.items.map((item, j) => <li key={item} className="reveal" style={delay(j * 0.06)}><Icon name="check" />{item}</li>)}
-            </ul>
-            <div className="reveal">
-              <Link className="btn btn--secondary btn--sm" href={`/get-support?need=${p.key}`}>Get help with {p.name.toLowerCase()}</Link>
-            </div>
+          <div className="section-head reveal">
+            <p className="eyebrow">{c.home.pillarsEyebrow}</p>
+            <h2 id="services-title">{c.home.pillarsTitle}</h2>
+            {c.pillars.intro && <p>{c.pillars.intro}</p>}
           </div>
-        </section>
-      ))}
+          <ol className="service-table" role="list">
+            {pillars.map((p, i) => (
+              <li key={p.key} id={p.key} className="service-table__row reveal" style={delay(i * 0.06)}>
+                <div className="service-table__pillar">
+                  <span className="pillar__icon"><Icon name={p.icon} /></span>
+                  <div>
+                    <span className="service-table__num">0{i + 1}</span>
+                    <h3>{p.name}</h3>
+                  </div>
+                </div>
+                <ul className="service-table__items" aria-label={`${p.name} services`}>
+                  {p.items.map((item) => <li key={item}><Icon name="check" />{item}</li>)}
+                </ul>
+                <Link className="service-table__cta text-link" href={`/get-support?need=${p.key}`}>
+                  Get help<span className="visually-hidden"> with {p.name}</span> <Icon name="arrow" />
+                </Link>
+              </li>
+            ))}
+          </ol>
+          <p className="note" style={{ marginTop: '1.25rem' }}>Not sure which service fits? <Link href="/get-support">Tell us what you need</Link> and we’ll guide you.</p>
+        </div>
+      </section>
 
       <section className="section section--dark" id="journey" aria-labelledby="journey-title">
         <div className="container">
