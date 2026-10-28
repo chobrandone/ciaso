@@ -100,15 +100,49 @@ docker compose up -d --build
 
 On start, the container runs `scripts/setup-db.mjs` (creating tables, content and the admin only if missing) and then the server on port 3000. Put it behind HTTPS (for example Caddy, Nginx, or your platform's TLS). Back up the `ciaso-data` volume.
 
-### Option B – Vercel (serverless)
+### Option B – Vercel + Turso (database) + Hostinger (domain & email)
 
-Serverless functions can't keep a local file, so use a hosted libSQL database (for example Turso; its free tier is enough):
+Vercel's file system is read-only, so the database must be hosted. **Without `DATABASE_URL` the site cannot start on Vercel.** Turso's free plan is enough.
 
-1. Create a database, then set `DATABASE_URL=libsql://…` and `DATABASE_AUTH_TOKEN` in Vercel, plus `SITE_URL`, `AUTH_SECRET` and the SMTP variables.
-2. Run `npm run db:setup` once from your computer with those same variables, to create the tables, content and admin.
-3. Deploy the repository on Vercel (framework preset: Next.js).
+**1. Create the database (Turso)**
+- Sign up at turso.tech, create a database (e.g. `ciaso`, region close to Alberta such as `aws-us-west-2`).
+- Copy the **Database URL** (`libsql://ciaso-<you>.turso.io`) and create a **token** (Database → Create token).
 
-The form rate limiter is in-memory, so on serverless it limits per instance. Add a shared store (such as Upstash) if spam becomes a problem.
+**2. Load the tables, content and first admin** – once, from your computer, in the project folder. Put these in `.env.local` temporarily (or a separate `.env.production.local`):
+
+```
+DATABASE_URL=libsql://ciaso-<you>.turso.io
+DATABASE_AUTH_TOKEN=<token>
+ADMIN_EMAIL=admin@ciaso.ca
+ADMIN_PASSWORD=<a strong password, 12+ characters>
+```
+
+```bash
+npm run db:setup
+```
+
+Afterwards, switch `.env.local` back to `DATABASE_URL=file:./data/ciaso.db` for local development.
+
+**3. Environment variables on Vercel** (Project → Settings → Environment Variables, for Production):
+
+| Name | Value |
+|---|---|
+| `DATABASE_URL` | `libsql://ciaso-<you>.turso.io` |
+| `DATABASE_AUTH_TOKEN` | the Turso token |
+| `AUTH_SECRET` | a long random string (`node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"`) |
+| `SITE_URL` | `https://ciaso.ca` (or your `https://….vercel.app` address until the domain is connected) |
+| `SMTP_HOST` | `smtp.hostinger.com` |
+| `SMTP_PORT` | `465` |
+| `SMTP_USER` | `admin@ciaso.ca` |
+| `SMTP_PASS` | the admin@ciaso.ca mailbox password |
+| `SMTP_FROM` | `CIASO <admin@ciaso.ca>` |
+| `NOTIFY_EMAIL` | `admin@ciaso.ca` |
+
+Then **Deployments → Redeploy** (environment changes only apply to new deployments).
+
+**4. Connect the domain (Hostinger DNS)** – in Vercel add `ciaso.ca` and `www.ciaso.ca` (Project → Settings → Domains). In Hostinger hPanel → Domains → DNS: set the `@` **A** record to `76.76.21.21` and the `www` **CNAME** to `cname.vercel-dns.com` (use the exact values Vercel shows). **Do not change the MX, SPF or DKIM records** – they keep admin@ciaso.ca email working.
+
+Notes: uploads are limited to 4 MB per save (Vercel rejects larger requests). The form rate limiter is in-memory, so on serverless it limits per instance; add a shared store (e.g. Upstash) if spam becomes a problem.
 
 ### Option C – Plain Node server
 

@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from 'react';
 import type { ContentState } from '../../../actions';
 import type { Field, Section, SubField } from '@/lib/content-schema';
+import UploadSizeGuard from '@/components/UploadSizeGuard';
 
 type Values = Record<string, unknown>;
 
@@ -43,7 +44,7 @@ function Scalar({ field, value, onChange, id, uploadName }: { field: SubField; v
             {/* eslint-disable-next-line @next/next/no-img-element */}
             {src ? <img src={src} alt="" className="image-field__preview" /> : <span className="image-field__preview image-field__preview--empty">No image</span>}
             <div className="image-field__controls">
-              <label className="hint" htmlFor={`${id}-file`}>Upload a new image (JPG, PNG or WebP, up to 5 MB):</label>
+              <label className="hint" htmlFor={`${id}-file`}>Upload a new image (JPG, PNG or WebP, up to 4 MB):</label>
               <input className="input" id={`${id}-file`} name={uploadName} type="file" accept="image/jpeg,image/png,image/webp" />
               <label className="hint" htmlFor={`${id}-pick`}>Or choose a built-in photo:</label>
               <select className="select" id={`${id}-pick`} value={BUILT_IN_IMAGES.some(([v]) => v === src) ? src : ''} onChange={(e) => e.target.value && onChange(e.target.value)}>
@@ -148,6 +149,7 @@ export default function ContentEditor({ section, values, action }: {
         {result.ok && !dirty && <div className="notice notice--ok" role="status">Changes saved and published to the website.</div>}
         {result.ok && result.warning && <div className="notice notice--error" role="alert">{result.warning}</div>}
       </div>
+      <UploadSizeGuard />
       <input type="hidden" name="section" value={section.id} />
       <input type="hidden" name="payload" value={JSON.stringify(state)} />
       {section.fields.map((f) => (

@@ -82,13 +82,13 @@ const eventSchema = z.object({
 });
 
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_IMAGE = 5 * 1024 * 1024;
+const MAX_IMAGE = 4 * 1024 * 1024; // hosts like Vercel cap each request at 4.5 MB
 
 /** Reads an uploaded image. Returns null when no file was chosen; throws a user-facing message if invalid. */
 async function readImage(file: FormDataEntryValue | null): Promise<{ data: Uint8Array; mime: string } | null> {
   if (!file || typeof file === 'string' || file.size === 0) return null;
   if (!IMAGE_TYPES.includes(file.type)) throw new Error('Images must be JPG, PNG or WebP.');
-  if (file.size > MAX_IMAGE) throw new Error('Each image must be 5 MB or smaller.');
+  if (file.size > MAX_IMAGE) throw new Error('Each image must be 4 MB or smaller.');
   const data = new Uint8Array(await file.arrayBuffer());
   // Check the file's real signature, not just its declared type
   const sig = Array.from(data.slice(0, 12));

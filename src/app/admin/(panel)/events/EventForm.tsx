@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { EventRow } from '@/lib/data';
 import { deleteEvent, deleteEventImage, saveEvent } from '../../actions';
 import { ConfirmButton } from '../ui';
+import UploadSizeGuard from '@/components/UploadSizeGuard';
 
 const topicOptions = ['Settle', 'Work', 'Grow', 'Belong', 'Thrive'];
 
@@ -10,6 +11,7 @@ export default function EventForm({ ev, gallery = [], past = false }: { ev?: Eve
   return (
     <>
       <form action={saveEvent} className="panel admin-form" encType="multipart/form-data">
+        <UploadSizeGuard />
         {ev && <input type="hidden" name="id" value={ev.id} />}
         {!ev && (
           <p className="notice notice--ok" style={{ margin: 0 }}>
@@ -90,7 +92,7 @@ export default function EventForm({ ev, gallery = [], past = false }: { ev?: Eve
         </div>
 
         <fieldset className="field">
-          <legend>Flyer image <span className="optional">(JPG, PNG or WebP, up to 5 MB)</span></legend>
+          <legend>Flyer image <span className="optional">(JPG, PNG or WebP, up to 4 MB in total per save)</span></legend>
           {ev?.has_image ? (
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -103,7 +105,7 @@ export default function EventForm({ ev, gallery = [], past = false }: { ev?: Eve
         </fieldset>
 
         <fieldset className="field">
-          <legend>Photo gallery <span className="optional">(optional – e.g. photos from the day, other-language flyers)</span></legend>
+          <legend>Photo gallery <span className="optional">(optional – add a few at a time; all images in one save must total 4 MB or less)</span></legend>
           <label htmlFor="gallery" className="hint">Add one or more photos:</label>
           <input className="input" id="gallery" name="gallery" type="file" accept="image/jpeg,image/png,image/webp" multiple />
         </fieldset>
