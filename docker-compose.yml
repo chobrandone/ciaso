@@ -1,0 +1,17 @@
+# Run with: docker compose up -d --build   (after creating .env from .env.example)
+services:
+  web:
+    build:
+      context: .
+      args:
+        SITE_URL: ${SITE_URL:-https://ciaso.ca}
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file: .env
+    environment:
+      DATABASE_URL: file:/app/data/ciaso.db
+    volumes:
+      - ciaso-data:/app/data
+volumes:
+  ciaso-data:
