@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start -p 3000",
     "db:setup": "node --env-file-if-exists=.env.local --env-file-if-exists=.env scripts/setup-db.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:setup:prod": "node --env-file=.env.turso.local scripts/setup-db.mjs"
   },
   "engines": {
     "node": ">=20.12"

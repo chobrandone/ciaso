@@ -3,7 +3,9 @@ import { createClient, type Client, type InValue } from '@libsql/client';
 import { mkdirSync } from 'node:fs';
 import { applySchema } from '../../db/schema.mjs';
 
-const url = process.env.DATABASE_URL || 'file:./data/ciaso.db';
+// DATABASE_* or the TURSO_* names that Vercel's Turso integration adds automatically
+const url = process.env.DATABASE_URL || process.env.TURSO_DATABASE_URL || 'file:./data/ciaso.db';
+const authToken = process.env.DATABASE_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN || undefined;
 
 // Serverless hosts (Vercel) have a read-only file system, so a local SQLite file cannot work there.
 const SERVERLESS = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY);
@@ -14,13 +16,13 @@ function client(): Client {
   if (!globalForDb.ciasoDb) {
     if (SERVERLESS && url.startsWith('file:')) {
       throw new Error(
-        'DATABASE_URL is not set to a hosted database. On Vercel the file system is read-only, so set ' +
-        'DATABASE_URL (e.g. libsql://ciaso-<you>.turso.io) and DATABASE_AUTH_TOKEN in Project Settings → ' +
+        'No hosted database is configured. On Vercel the file system is read-only, so set DATABASE_URL and ' +
+        'DATABASE_AUTH_TOKEN (or TURSO_DATABASE_URL and TURSO_AUTH_TOKEN) in Project Settings → ' +
         'Environment Variables, then redeploy. See README → Deploy → Vercel.'
       );
     }
     if (url.startsWith('file:./data/')) mkdirSync('data', { recursive: true });
-    globalForDb.ciasoDb = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN || undefined });
+    globalForDb.ciasoDb = createClient({ url, authToken });
   }
   return globalForDb.ciasoDb;
 }

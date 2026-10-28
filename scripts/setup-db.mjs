@@ -10,9 +10,9 @@ import { applySchema } from '../db/schema.mjs';
 import { events, stories, videos } from '../db/seed-data.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const url = process.env.DATABASE_URL || 'file:./data/ciaso.db';
+const url = process.env.DATABASE_URL || process.env.TURSO_DATABASE_URL || 'file:./data/ciaso.db';
 if (url.startsWith('file:./data/')) mkdirSync('data', { recursive: true });
-const db = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN || undefined });
+const db = createClient({ url, authToken: process.env.DATABASE_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN || undefined });
 
 await applySchema((sql) => db.execute(sql));
 console.log('✓ Schema ready');
