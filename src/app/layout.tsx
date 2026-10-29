@@ -8,18 +8,20 @@ import './motion.css';
 import './nav.css';
 import './pages.css';
 
-const poppins = localFont({
-  src: [
-    { path: './fonts/poppins-400.woff2', weight: '400', style: 'normal' },
-    { path: './fonts/poppins-400-italic.woff2', weight: '400', style: 'italic' },
-    { path: './fonts/poppins-500.woff2', weight: '500', style: 'normal' },
-    { path: './fonts/poppins-600.woff2', weight: '600', style: 'normal' },
-    { path: './fonts/poppins-700.woff2', weight: '700', style: 'normal' },
-    { path: './fonts/poppins-800.woff2', weight: '800', style: 'normal' }
-  ],
-  variable: '--font-poppins',
+// Plus Jakarta Sans: clean, smooth sans for text and headings (variable weight)
+const jakarta = localFont({
+  src: [{ path: './fonts/plus-jakarta-sans-var.woff2', weight: '300 800', style: 'normal' }],
+  variable: '--font-sans',
   display: 'swap',
   fallback: ['system-ui', 'Segoe UI', 'Arial', 'sans-serif']
+});
+
+// Instrument Serif italic: the stylish accent word in headlines
+const serif = localFont({
+  src: [{ path: './fonts/instrument-serif-italic.woff2', weight: '400', style: 'italic' }],
+  variable: '--font-serif',
+  display: 'swap',
+  fallback: ['Georgia', 'Times New Roman', 'serif']
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,7 +45,7 @@ export const viewport: Viewport = { themeColor: '#CD0E00' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-CA" className={poppins.variable}>
+    <html lang="en-CA" className={`${jakarta.variable} ${serif.variable}`}>
       <body>
         <IconSprite />
         {children}

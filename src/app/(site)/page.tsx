@@ -18,6 +18,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: { absolute: home.seoTitle }, description: home.seoDescription, alternates: { canonical: '/' } };
 }
 
+/** Rotating line under the hero title, one phrase per pillar. */
+const rotatorPhrases: Record<string, string> = { settle: 'settle in Canada', work: 'find meaningful work', grow: 'grow their skills', belong: 'build community', thrive: 'thrive for good' };
+
 const orgJsonLdBase = {
   '@context': 'https://schema.org',
   '@type': 'NGO',
@@ -31,7 +34,6 @@ export default async function HomePage() {
   const [stories, current, c, contact, pillars] = await Promise.all([getStories(3), getCurrentEvents(3), getContent(), getContact(), getPillars()]);
   const recent = current.length ? [] : await getPastEvents(3);
   const { brand, home } = c;
-  const marquee = [...brand.campaign, brand.summary, brand.hashtag].filter(Boolean);
   const orgJsonLd = {
     ...orgJsonLdBase,
     name: `${contact.orgName} (CIASO)`,
@@ -53,18 +55,29 @@ export default async function HomePage() {
         </div>
         <div className="container hero-v2__grid">
           <div>
-            <p className="eyebrow anim-up">{home.heroEyebrow}</p>
+            <p className="hero-badge anim-up"><span className="hero-badge__dot" aria-hidden="true" />{home.heroEyebrow}</p>
             <h1 id="hero-title" className="hero-v2__title">
               <span className="line anim-up" style={delay(0.1)}>{home.heroLine1}</span>
-              <span className="line anim-up" style={delay(0.22)}>{home.heroLine2}</span>
-              <span className="line accent anim-up" style={delay(0.34)}>{home.heroAccent}</span>
+              <span className="line anim-up" style={delay(0.22)}>{home.heroLine2} <span className="accent">{home.heroAccent}</span></span>
             </h1>
+            <p className="hero-rotator anim-up" style={delay(0.38)}>
+              <span>We help newcomers</span>
+              <span className="visually-hidden">{pillars.map((p) => rotatorPhrases[p.key]).join(', ')}.</span>
+              <span className="hero-rotator__window" aria-hidden="true">
+                <span className="hero-rotator__words">
+                  {[...pillars, pillars[0]].map((p, i) => <span key={i}>{rotatorPhrases[p.key]}</span>)}
+                </span>
+              </span>
+            </p>
             <p className="hero-v2__lead anim-up" style={delay(0.5)}>{brand.promise}</p>
             <div className="btn-row anim-up" style={delay(0.62)}>
               <Link className="btn btn--primary" href="/get-support">Get Support</Link>
               <Link className="btn btn--secondary" href="/services">Explore Our Services</Link>
               <Link className="text-link" href="/about">Learn About CIASO <Icon name="arrow" /></Link>
             </div>
+            <ul className="hero-pillars anim-up" style={delay(0.75)} aria-label="Our five pillars">
+              {pillars.map((p) => <li key={p.key}><Icon name={p.icon} />{p.name}</li>)}
+            </ul>
           </div>
           <div className="hero-v2__panel glass">
             <h2>{home.panelTitle}</h2>
@@ -84,21 +97,6 @@ export default async function HomePage() {
         </div>
         <span className="scroll-cue" aria-hidden="true" />
       </section>
-
-      <div className="marquee" role="presentation">
-        <div className="marquee__track">
-          {[0, 1].map((g) => (
-            <div key={g} className="marquee__group" aria-hidden={g === 1 ? 'true' : undefined}>
-              {[...marquee, ...marquee].map((t, i) => (
-                <span key={i} style={{ display: 'contents' }}>
-                  <span className={i % 2 ? 'alt' : undefined}>{t}</span>
-                  <span className="marquee__dot" />
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Who we are + who we help, with CIASO's video in the content */}
       <section className="section" aria-labelledby="intro-title">

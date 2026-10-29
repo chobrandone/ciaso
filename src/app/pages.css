@@ -1,5 +1,5 @@
 /* ---------- v3: content blocks ---------- */
-.mini-heading { font-family: var(--font-display); font-size: var(--fs-xs); font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); margin: 1.75rem 0 0.75rem; }
+.mini-heading { font-family: var(--font-display); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); margin: 1.75rem 0 0.75rem; }
 .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .chips li { padding: 0.45rem 1rem; border-radius: 999px; background: var(--red-tint); color: var(--red-dark); font-weight: 650; font-size: var(--fs-sm); border: 1px solid #f7c9c5; }
 
@@ -20,7 +20,7 @@
 .service-list .icon { color: var(--red); stroke-width: 2.25; }
 
 /* Connector */
-.connector__plus { color: #ff6b5e; font-weight: 800; }
+.connector__plus { color: #ff6b5e; font-weight: 700; }
 .connector--light .connector__item { background: var(--white); border-color: var(--line); }
 .connector--light .connector__item h3 { color: var(--ink); }
 .connector--light .connector__item p { color: var(--muted); }
@@ -124,9 +124,12 @@
 .service-table__items .icon { width: 0.95rem; height: 0.95rem; color: var(--red); stroke-width: 2.5; }
 .service-table__cta { white-space: nowrap; font-size: var(--fs-sm); }
 
-/* Poppins is wider than the original display font: relax the tight heading tracking */
-h1, h2, h3, h4, .page-header h1, .final-cta__title { letter-spacing: -0.01em; }
-.hero-v2__title { letter-spacing: -0.015em; }
+/* Plus Jakarta Sans: semi-bold headings (bold, but not heavy) with gentle tracking */
+h1, h2 { font-weight: 600; letter-spacing: -0.025em; }
+h3, h4 { font-weight: 600; letter-spacing: -0.01em; }
+.page-header h1 { font-weight: 600; letter-spacing: -0.025em; }
+.final-cta__title { font-weight: 600; text-transform: none; letter-spacing: -0.025em; }
+body { letter-spacing: -0.003em; }
 
 /* ---------- Language switch (Google Translate) ---------- */
 .lang-switch { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0; border: 0; background: none; color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
