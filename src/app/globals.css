@@ -26,12 +26,12 @@
   --font-body: var(--font-poppins), system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --fs-xs: 0.8125rem;
   --fs-sm: 0.9375rem;
-  --fs-base: 1.0625rem;
-  --fs-lg: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
-  --fs-h4: 1.25rem;
-  --fs-h3: clamp(1.375rem, 1.25rem + 0.5vw, 1.625rem);
-  --fs-h2: clamp(2rem, 1.6rem + 1.6vw, 3rem);
-  --fs-h1: clamp(2.5rem, 1.8rem + 3vw, 4.5rem);
+  --fs-base: 1rem;
+  --fs-lg: clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);
+  --fs-h4: 1.125rem;
+  --fs-h3: clamp(1.1875rem, 1.1rem + 0.35vw, 1.375rem);
+  --fs-h2: clamp(1.5rem, 1.3rem + 0.9vw, 2.125rem);
+  --fs-h1: clamp(1.875rem, 1.5rem + 1.6vw, 2.75rem);
 
   /* Space & shape */
   --gutter: clamp(1rem, 0.6rem + 2vw, 2rem);
@@ -331,7 +331,7 @@ main:focus { outline: none; }
 /* Journey detail cards (journey page) */
 .stage-card { display: grid; gap: 1.5rem; padding: clamp(1.5rem, 1rem + 2vw, 2.5rem); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--white); }
 @media (min-width: 860px) { .stage-card { grid-template-columns: 200px 1fr 1fr; align-items: start; } }
-.stage-card__num { font-family: var(--font-display); font-weight: 800; font-size: 3.5rem; line-height: 1; color: var(--red); }
+.stage-card__num { font-family: var(--font-display); font-weight: 800; font-size: 2.5rem; line-height: 1; color: var(--red); }
 .stage-card .stage-card__name { font-family: var(--font-display); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; font-size: 1.375rem; margin: 0.25rem 0 0; color: var(--ink); }
 .stage-card h3 { font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-family: var(--font-body); font-weight: 700; margin-bottom: 0.75rem; }
 .stage-card ul { margin: 0; padding-left: 1.1rem; }
@@ -412,7 +412,7 @@ a.audience:hover { border-color: var(--red); box-shadow: var(--shadow); color: i
 /* ---------- Impact ---------- */
 .impact { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
 .impact__item { padding: 1.75rem; border-radius: var(--radius); background: var(--white); border: 1px solid var(--line); }
-.impact__kicker { font-family: var(--font-display); font-weight: 800; font-size: 2.5rem; line-height: 1; color: var(--red); margin-bottom: 0.75rem; letter-spacing: -0.03em; }
+.impact__kicker { font-family: var(--font-display); font-weight: 800; font-size: 2rem; line-height: 1; color: var(--red); margin-bottom: 0.75rem; letter-spacing: -0.03em; }
 .impact__item h3 { font-size: 1.125rem; margin-bottom: 0.4rem; }
 .impact__item p { margin: 0; font-size: var(--fs-sm); color: var(--muted); }
 .metric-pending { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.75rem; font-size: var(--fs-xs); font-weight: 600; color: var(--muted); padding: 0.25rem 0.6rem; border: 1px dashed var(--line-strong); border-radius: 999px; }
@@ -472,7 +472,7 @@ a.audience:hover { border-color: var(--red); box-shadow: var(--shadow); color: i
 .final-cta::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--red); }
 .final-cta__inner { display: grid; gap: 2.5rem; }
 @media (min-width: 1000px) { .final-cta__inner { grid-template-columns: 1fr 1.05fr; align-items: center; } }
-.final-cta__title { color: var(--white); text-transform: uppercase; font-size: clamp(2rem, 1.5rem + 2vw, 3.25rem); line-height: 1.02; }
+.final-cta__title { color: var(--white); text-transform: uppercase; font-size: clamp(1.5rem, 1.25rem + 1.1vw, 2.25rem); line-height: 1.15; }
 .final-cta p { color: #b9b9c0; font-size: var(--fs-lg); max-width: 34rem; }
 .pathways { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
 .pathway {
@@ -645,7 +645,7 @@ ul[role="list"], ol[role="list"] { list-style: none; margin: 0; padding: 0; }
 figure { margin: 0; }
 .section-head .eyebrow, .final-cta .eyebrow, .pillar-section__head .eyebrow { font-size: var(--fs-xs); color: var(--red); }
 .section-head .eyebrow--light, .final-cta .eyebrow--light { color: #ff6b5e; }
-.impact__item .impact__kicker { font-family: var(--font-display); font-weight: 800; font-size: 2.5rem; line-height: 1; color: var(--red); margin-bottom: 0.75rem; }
+.impact__item .impact__kicker { font-family: var(--font-display); font-weight: 800; font-size: 2rem; line-height: 1; color: var(--red); margin-bottom: 0.75rem; }
 /* backdrop-filter would make the header the containing block for the fixed mobile menu */
 @media (max-width: 1199px) { .site-header { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--white); } }
 .section--dark .journey__num { color: #ff6b5e; }

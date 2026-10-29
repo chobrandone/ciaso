@@ -15,10 +15,13 @@ export default function EventCard({ ev, past = false }: { ev: EventRow; past?: b
   return (
     <article className={`event event--card${past ? ' event--past' : ''}`}>
       <div className="event__media">
-        {ev.has_image ? (
+        {ev.has_image || ev.cover_photo ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={flyerUrl(ev)} alt="" loading="lazy" />
+          <img src={ev.has_image ? flyerUrl(ev) : `/media/event-images/${ev.cover_photo}`} alt="" loading="lazy" />
         ) : <span className="event__media-fallback"><Icon name="calendar" /></span>}
+        {ev.photo_count > 0 && (
+          <span className="event__photos"><Icon name="image" />{ev.photo_count} photo{ev.photo_count > 1 ? 's' : ''}</span>
+        )}
         <span className={`event__kind event__kind--${ev.kind}`}>{ev.kind === 'workshop' ? 'Workshop' : 'Event'}</span>
       </div>
       <div className="event__body">
@@ -35,7 +38,7 @@ export default function EventCard({ ev, past = false }: { ev: EventRow; past?: b
         )}
         <p>{ev.description}</p>
         <div className="event__actions">
-          <span className="text-link" aria-hidden="true">{past ? 'Read more' : 'Details & registration'} <Icon name="arrow" /></span>
+          <span className="text-link" aria-hidden="true">{past ? (ev.photo_count > 0 ? 'See photos & recap' : 'Read more') : 'Details & registration'} <Icon name="arrow" /></span>
           {!past && ev.register_url && (
             <a className="btn btn--primary btn--sm event__register" href={ev.register_url} rel="noopener" target="_blank">
               Register<span className="visually-hidden"> for {ev.title} (opens in a new tab)</span>

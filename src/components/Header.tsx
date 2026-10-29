@@ -5,9 +5,10 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Icon from './Icon';
+import LanguageSwitch from './LanguageSwitch';
 import type { NavLink, NavTab } from '@/lib/content';
 
-export type HeaderContact = { email: string; hours: string; frenchUrl: string; phone: { display: string; tel: string } | null };
+export type HeaderContact = { email: string; hours: string; phone: { display: string; tel: string } | null };
 
 export default function Header({ contact, nav, logo }: { contact: HeaderContact; nav: { tabs: NavTab[]; cta: NavLink }; logo: string }) {
   const pathname = usePathname();
@@ -77,7 +78,7 @@ export default function Header({ contact, nav, logo }: { contact: HeaderContact;
             {contact.hours && <li className="topbar__hours"><Icon name="clock" />{contact.hours}</li>}
           </ul>
           <ul className="topbar__links" aria-label="Language">
-            {contact.frenchUrl && <li><a href={contact.frenchUrl} lang="fr" hrefLang="fr"><Icon name="globe" />Français</a></li>}
+            <li><LanguageSwitch /></li>
           </ul>
         </div>
       </section>
@@ -125,9 +126,9 @@ export default function Header({ contact, nav, logo }: { contact: HeaderContact;
               <Link className="btn btn--primary btn--block" href={nav.cta.href}>{nav.cta.label}</Link>
               <p className="primary-nav__contact">
                 {contact.phone && <><a href={`tel:${contact.phone.tel}`}>{contact.phone.display}</a><br /></>}
-                <a href={`mailto:${contact.email}`}>{contact.email}</a><br />
-                {contact.frenchUrl && <a href={contact.frenchUrl} lang="fr" hrefLang="fr">Français</a>}
+                <a href={`mailto:${contact.email}`}>{contact.email}</a>
               </p>
+              <LanguageSwitch className="lang-switch--mobile" />
             </div>
           </nav>
           <div className="site-header__actions">

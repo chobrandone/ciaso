@@ -15,7 +15,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
     <>
       <PageLoader logo={images.logo} />
       <Suspense fallback={null}><RouteProgress /></Suspense>
-      <Header contact={{ email: contact.email, hours: contact.hours, frenchUrl: contact.frenchUrl, phone: contact.phones[0] ?? null }} nav={nav} logo={images.logo} />
+      <Header contact={{ email: contact.email, hours: contact.hours, phone: contact.phones[0] ?? null }} nav={nav} logo={images.logo} />
       <main id="main" tabIndex={-1}>{children}</main>
       <Footer />
       <RevealObserver />

@@ -9,3 +9,6 @@ export function formatEventDate(iso: string) {
     weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC'
   });
 }
+
+/** Photos an event can have in its gallery. */
+export const MAX_EVENT_PHOTOS = 6;

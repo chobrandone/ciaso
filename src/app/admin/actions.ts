@@ -4,11 +4,12 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { execute, queryOne } from '@/lib/db';
+import { execute, query, queryOne } from '@/lib/db';
 import { checkPassword, endSession, hashPassword, requireAdmin, startSession, verifyCredentials } from '@/lib/auth';
 import { clientIp, rateLimit } from '@/lib/rate-limit';
 import { parseYouTubeId } from '@/lib/youtube';
 import { todayEdmonton } from '@/lib/data';
+import { MAX_EVENT_PHOTOS } from '@/lib/ui';
 import { getContent } from '@/lib/content';
 import { sections as contentSections, type Field, type SectionId } from '@/lib/content-schema';
 
@@ -121,6 +122,13 @@ export async function saveEvent(fd: FormData) {
     back(target, { error: (err as Error).message });
   }
 
+  // Photos ticked "Remove", and the 6-photo limit per event
+  const keep = id ? await query<{ id: number }>('SELECT id FROM event_images WHERE event_id = ?', [id]) : [];
+  const removeIds = fd.getAll('remove_photo').map(Number).filter((n) => keep.some((k) => Number(k.id) === n));
+  if (keep.length - removeIds.length + photos.length > MAX_EVENT_PHOTOS) {
+    back(target, { error: `An event can have up to ${MAX_EVENT_PHOTOS} photos. It has ${keep.length - removeIds.length}; you tried to add ${photos.length}. Remove some first.` });
+  }
+
   const e = parsed.data!;
   const cols = ['kind', 'title', 'date', 'date_text', 'time_text', 'format', 'location', 'speaker', 'description', 'body', 'eligibility', 'deadline', 'register_url', 'details_url', 'topics', 'published'] as const;
   const vals = cols.map((c) => e[c]);
@@ -132,19 +140,12 @@ export async function saveEvent(fd: FormData) {
   }
   if (flyer) await execute("UPDATE events SET image = ?, image_type = ?, updated_at = datetime('now') WHERE id = ?", [flyer.data, flyer.mime, eventId]);
   else if (id && fd.get('remove_image') === 'on') await execute("UPDATE events SET image = NULL, image_type = NULL, updated_at = datetime('now') WHERE id = ?", [id]);
+  for (const pid of removeIds) await execute('DELETE FROM event_images WHERE id = ? AND event_id = ?', [pid, id]);
   for (const [i, p] of photos.entries()) {
     await execute('INSERT INTO event_images (event_id, data, mime, sort_order) VALUES (?, ?, ?, (SELECT COALESCE(MAX(sort_order), 0) + ? FROM event_images WHERE event_id = ?))', [eventId, p.data, p.mime, i + 1, eventId]);
   }
   revalidatePath('/', 'layout');
   back('/admin/events', { saved: '1', tab: e.date >= todayEdmonton() ? 'current' : 'past' });
-}
-
-export async function deleteEventImage(fd: FormData) {
-  await requireAdmin();
-  const eventId = Number(fd.get('event_id'));
-  await execute('DELETE FROM event_images WHERE id = ? AND event_id = ?', [Number(fd.get('id')), eventId]);
-  revalidatePath('/', 'layout');
-  back(`/admin/events/${eventId}`, { saved: '1' });
 }
 
 export async function deleteEvent(fd: FormData) {

@@ -285,7 +285,6 @@ export const sections: Section[] = [
     { key: 'region', label: 'Province', type: 'text' },
     { key: 'postal', label: 'Postal code', type: 'text' },
     { key: 'mapUrl', label: 'Map / directions link', type: 'url' },
-    { key: 'frenchUrl', label: '“Français” link', type: 'url' },
     { key: 'linkedin', label: 'LinkedIn', type: 'url' },
     { key: 'facebook', label: 'Facebook', type: 'url' },
     { key: 'youtube', label: 'YouTube channel', type: 'url' }

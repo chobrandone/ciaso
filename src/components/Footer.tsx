@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Icon from './Icon';
+import LanguageSwitch from './LanguageSwitch';
 import { getContact, getContent, getPillars } from '@/lib/content';
 
 export default async function Footer() {
@@ -57,7 +58,7 @@ export default async function Footer() {
           <p>© {new Date().getFullYear()} {c.footer.copyright}</p>
           <ul>
             <li><Link href="/accessibility">Accessibility</Link></li>
-            {contact.frenchUrl && <li><a href={contact.frenchUrl} lang="fr" hrefLang="fr">Français</a></li>}
+            <li><LanguageSwitch /></li>
           </ul>
         </div>
       </div>

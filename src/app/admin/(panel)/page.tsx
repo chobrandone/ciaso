@@ -1,11 +1,22 @@
 import Link from 'next/link';
-import Icon from '@/components/Icon';
+import Icon, { type IconName } from '@/components/Icon';
 import { query, queryOne } from '@/lib/db';
 import { todayEdmonton, type SubmissionRow } from '@/lib/data';
 import { labels } from '@/lib/validation';
 import { formatEventDate } from '@/lib/ui';
 
 export const metadata = { title: 'Dashboard' };
+
+const tasks: { href: string; icon: IconName; title: string; text: string }[] = [
+  { href: '/admin/events/new', icon: 'plus', title: 'Add an event', text: 'Upcoming workshop or event, with its flyer' },
+  { href: '/admin/events?tab=past', icon: 'image', title: 'Add event photos', text: 'Up to 6 photos for each past event' },
+  { href: '/admin/content/home', icon: 'settle', title: 'Edit the home page', text: 'Headline, intro text and sections' },
+  { href: '/admin/content/images', icon: 'image', title: 'Change logo & pictures', text: 'Logo, hero and page header images' },
+  { href: '/admin/content/partners', icon: 'handshake', title: 'Partner logos', text: 'Add, remove or reorder partners' },
+  { href: '/admin/content/nav', icon: 'menu', title: 'Edit the menu', text: 'Tabs and dropdowns at the top' },
+  { href: '/admin/content/contact', icon: 'phone', title: 'Contact details', text: 'Phone, email, address, social links' },
+  { href: '/admin/content', icon: 'globe', title: 'All pages & text', text: 'Every page of the website' }
+];
 
 const plural = { support: 'Support requests', contact: 'Contact messages', volunteer: 'Volunteer applications', partner: 'Partnership enquiries' };
 
@@ -28,6 +39,20 @@ export default async function Dashboard() {
         <div><h1>Dashboard</h1><p>{Number(lastWeek?.n ?? 0)} new enquiries in the last 7 days.</p></div>
         <Link className="btn btn--primary btn--sm" href="/admin/events/new"><Icon name="plus" />Add event</Link>
       </div>
+
+      <section className="panel" aria-labelledby="tasks-title">
+        <h2 id="tasks-title">What would you like to do?</h2>
+        <ul className="task-grid" role="list">
+          {tasks.map((t) => (
+            <li key={t.href}>
+              <Link className="task" href={t.href}>
+                <Icon name={t.icon} />
+                <span><strong>{t.title}</strong><span className="muted">{t.text}</span></span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <div className="stats">
         {(['support', 'contact', 'volunteer', 'partner'] as const).map((t) => (

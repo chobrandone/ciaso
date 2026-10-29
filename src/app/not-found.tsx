@@ -9,7 +9,7 @@ export default async function NotFound() {
   const [contact, nav, { images }] = await Promise.all([getContact(), getNav(), getContent()]);
   return (
     <>
-      <Header contact={{ email: contact.email, hours: contact.hours, frenchUrl: contact.frenchUrl, phone: contact.phones[0] ?? null }} nav={nav} logo={images.logo} />
+      <Header contact={{ email: contact.email, hours: contact.hours, phone: contact.phones[0] ?? null }} nav={nav} logo={images.logo} />
       <main id="main" tabIndex={-1}>
         <section className="not-found">
           <div className="container container--narrow">
