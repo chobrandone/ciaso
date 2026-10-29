@@ -6,6 +6,7 @@ export type EventRow = {
   id: number; kind: EventKind; title: string; date: string; date_text: string | null; time_text: string | null; format: string | null;
   location: string | null; speaker: string | null; description: string; body: string | null; eligibility: string | null; deadline: string | null;
   register_url: string | null; details_url: string | null; topics: string | null; published: number; has_image: number; updated_at: string;
+  recap: string | null; recap_body: string | null; linkedin_url: string | null; facebook_url: string | null;
   photo_count: number; cover_photo: number | null;
 };
 export type StoryRow = {
@@ -24,7 +25,8 @@ export type SubmissionRow = {
 
 /** Every event column except the image bytes, plus a has_image flag and its gallery photo count / first photo. */
 export const EVENT_COLUMNS = `id, kind, title, date, date_text, time_text, format, location, speaker, description, body, eligibility, deadline,
-  register_url, details_url, topics, published, created_at, updated_at, (image IS NOT NULL) AS has_image,
+  register_url, details_url, topics, published, created_at, updated_at, recap, recap_body, linkedin_url, facebook_url,
+  (image IS NOT NULL) AS has_image,
   (SELECT COUNT(*) FROM event_images g WHERE g.event_id = events.id) AS photo_count,
   (SELECT g.id FROM event_images g WHERE g.event_id = events.id ORDER BY g.sort_order, g.id LIMIT 1) AS cover_photo`;
 

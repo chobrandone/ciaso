@@ -79,7 +79,11 @@ const eventSchema = z.object({
   register_url: url.nullable(),
   details_url: url.nullable(),
   topics: z.string().max(100).nullable(),
-  published: z.number()
+  published: z.number(),
+  recap: z.string().max(1000).nullable(),
+  recap_body: z.string().max(20000).nullable(),
+  linkedin_url: url.refine((u) => /^https:\/\/([a-z]+\.)?linkedin\.com\//i.test(u), 'The LinkedIn link must be a linkedin.com address.').nullable(),
+  facebook_url: url.refine((u) => /^https:\/\/([a-z]+\.)?(facebook\.com|fb\.watch|fb\.me)\//i.test(u), 'The Facebook link must be a facebook.com address.').nullable()
 });
 
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -109,7 +113,8 @@ export async function saveEvent(fd: FormData) {
     format: optStr(fd, 'format'), location: optStr(fd, 'location'), speaker: optStr(fd, 'speaker'), description: str(fd, 'description'),
     body: optStr(fd, 'body'), eligibility: optStr(fd, 'eligibility'), deadline: optStr(fd, 'deadline'),
     register_url: optStr(fd, 'register_url'), details_url: optStr(fd, 'details_url'),
-    topics: fd.getAll('topics').map(String).join(',') || null, published: flag(fd, 'published')
+    topics: fd.getAll('topics').map(String).join(',') || null, published: flag(fd, 'published'),
+    recap: optStr(fd, 'recap'), recap_body: optStr(fd, 'recap_body'), linkedin_url: optStr(fd, 'linkedin_url'), facebook_url: optStr(fd, 'facebook_url')
   });
   if (!parsed.success) back(target, { error: firstIssue(parsed.error) });
 
@@ -130,7 +135,7 @@ export async function saveEvent(fd: FormData) {
   }
 
   const e = parsed.data!;
-  const cols = ['kind', 'title', 'date', 'date_text', 'time_text', 'format', 'location', 'speaker', 'description', 'body', 'eligibility', 'deadline', 'register_url', 'details_url', 'topics', 'published'] as const;
+  const cols = ['kind', 'title', 'date', 'date_text', 'time_text', 'format', 'location', 'speaker', 'description', 'body', 'eligibility', 'deadline', 'register_url', 'details_url', 'topics', 'published', 'recap', 'recap_body', 'linkedin_url', 'facebook_url'] as const;
   const vals = cols.map((c) => e[c]);
   let eventId = id;
   if (id) {

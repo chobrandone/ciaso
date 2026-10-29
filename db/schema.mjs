@@ -115,7 +115,12 @@ export const columns = [
   ['events', 'body', 'TEXT'],
   ['events', 'image', 'BLOB'],
   ['events', 'image_type', 'TEXT'],
-  ['videos', 'placement', "TEXT NOT NULL DEFAULT 'home'"]
+  ['videos', 'placement', "TEXT NOT NULL DEFAULT 'home'"],
+  // After-event recap: short summary, write-up and links to the full posts
+  ['events', 'recap', 'TEXT'],
+  ['events', 'recap_body', 'TEXT'],
+  ['events', 'linkedin_url', 'TEXT'],
+  ['events', 'facebook_url', 'TEXT']
 ];
 
 /** Applies tables, indexes and added columns. `run(sql)` must return { rows }. */

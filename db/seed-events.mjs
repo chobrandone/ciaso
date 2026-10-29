@@ -249,10 +249,9 @@ Discover effective job search strategies, explore entrepreneurship pathways, and
 - Registration: on Eventbrite
 
 ## En français : Briser les barrières – Poursuivez vos rêves de carrière
-CIASO, en partenariat avec l’Association des Entrepreneurs Afro-Canadiens (ACANEA), vous invite à un événement inspirant dédié à l’emploi, à l’intégration et à l’entrepreneuriat. Rejoignez-nous pour découvrir des opportunités professionnelles, échanger avec des experts, et développer votre réseau au sein d’une communauté engagée à soutenir votre réussite.
-
-## How it went
-CIASO, in collaboration with ACANEA and Parallèl Alberta, organized a workshop session encouraging and teaching participants from across Canada about navigating the Canadian job market, gaining experience and securing a job. We also spoke about the right ways to approach your entrepreneurial journey, and about helping seniors gain access to the digital world and get involved in tech. A lot of information was shared about the job market for French-speaking Canadians living in Alberta.
+CIASO, en partenariat avec l’Association des Entrepreneurs Afro-Canadiens (ACANEA), vous invite à un événement inspirant dédié à l’emploi, à l’intégration et à l’entrepreneuriat. Rejoignez-nous pour découvrir des opportunités professionnelles, échanger avec des experts, et développer votre réseau au sein d’une communauté engagée à soutenir votre réussite.`,
+    recap: "CIASO, ACANEA and Parallèl Alberta brought newcomers together in Edmonton to talk about navigating the Canadian job market, gaining experience, securing a job and starting a business.",
+    recap_body: `CIASO, in collaboration with ACANEA and Parallèl Alberta, organized a workshop session encouraging and teaching participants from across Canada about navigating the Canadian job market, gaining experience and securing a job. We also spoke about the right ways to approach your entrepreneurial journey, and about helping seniors gain access to the digital world and get involved in tech. A lot of information was shared about the job market for French-speaking Canadians living in Alberta.
 
 Participants were encouraged, and there was an opportunity to network, with representatives from the Canadian Imperial Bank of Commerce (CIBC) speaking about available employment opportunities.
 

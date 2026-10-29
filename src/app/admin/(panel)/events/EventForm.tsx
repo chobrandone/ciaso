@@ -23,7 +23,7 @@ export default function EventForm({ ev, gallery = [], past = false }: { ev?: Eve
           </p>
         )}
 
-        <FormTabs tabs={['1. Event details', `2. Flyer & photos (${gallery.length}/${MAX_EVENT_PHOTOS})`]}>
+        <FormTabs tabs={['1. Event details', `2. Flyer & photos (${gallery.length}/${MAX_EVENT_PHOTOS})`, `3. Recap & links${ev?.recap || ev?.recap_body ? ' ✓' : ''}`]}>
           <>
             <div className="row">
               <div className="field">
@@ -138,6 +138,31 @@ export default function EventForm({ ev, gallery = [], past = false }: { ev?: Eve
                 label={free ? `Add photos (${free} free slot${free > 1 ? 's' : ''})` : 'All 6 slots are used'} />
               {!free && <p className="hint" style={{ margin: 0 }}>To add new photos, tick “Remove” on some, click Save, then add the new ones.</p>}
             </fieldset>
+          </>
+
+          <>
+            <p className="tab-intro">After the event, tell people how it went. When an event is past, its page shows this recap first, then the photos, then buttons to the full post on LinkedIn and Facebook.</p>
+            <div className="field">
+              <label htmlFor="recap">Short recap <span className="optional">(1–3 sentences)</span></label>
+              <textarea className="textarea" id="recap" name="recap" maxLength={1000} style={{ minHeight: 90 }} defaultValue={ev?.recap ?? ''}
+                placeholder="e.g. Over 40 newcomers joined us to learn how to land their first job in Canada…" />
+            </div>
+            <div className="field">
+              <label htmlFor="recap_body">Write-up <span className="optional">(optional)</span></label>
+              <textarea className="textarea" id="recap_body" name="recap_body" maxLength={20000} style={{ minHeight: 220 }} defaultValue={ev?.recap_body ?? ''}
+                placeholder={'What was covered, key takeaways, thank-yous to speakers and partners…\n\n## Key takeaways\n- First point\n- Second point'} />
+              <p className="hint">Leave a blank line between paragraphs. Start a line with <code>## </code> for a heading and <code>- </code> for a bullet point.</p>
+            </div>
+            <div className="row">
+              <div className="field">
+                <label htmlFor="linkedin_url">LinkedIn post <span className="optional">(optional)</span></label>
+                <input className="input" id="linkedin_url" name="linkedin_url" type="url" placeholder="https://www.linkedin.com/posts/…" defaultValue={ev?.linkedin_url ?? ''} />
+              </div>
+              <div className="field">
+                <label htmlFor="facebook_url">Facebook post <span className="optional">(optional)</span></label>
+                <input className="input" id="facebook_url" name="facebook_url" type="url" placeholder="https://www.facebook.com/…" defaultValue={ev?.facebook_url ?? ''} />
+              </div>
+            </div>
           </>
         </FormTabs>
 
