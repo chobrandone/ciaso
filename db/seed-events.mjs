@@ -87,7 +87,8 @@ The session features Chita Marie, who shares practical insights, encouragement, 
 Success does not happen overnight. Every small step taken today contributes to a stronger and brighter future tomorrow. This workshop is more than just a learning session – it is an opportunity for newcomers to gain clarity, build valuable connections, and feel empowered as they begin a new chapter in Canada.`,
     details_url: 'https://ciaso.ca/2026/05/22/before-the-dream-job-smart-steps-every-newcomer-should-take-in-canada/',
     topics: 'Work,Settle',
-    image: '3981.jpg'
+    image: '3981.jpg',
+    gallery: ['3981-b.jpg']
   },
   {
     kind: 'workshop',
@@ -154,6 +155,38 @@ Contact us at 204-228-4625 or admin@ciaso.ca. Thank you for taking time to sign 
     details_url: 'https://ciaso.ca/2026/02/20/canada-integration-and-settlement-organization-ciaso/',
     topics: 'Settle,Work,Belong',
     image: '3957.jpg'
+  },
+  {
+    kind: 'workshop',
+    title: 'Tax Filing in Canada: Insights for Overcoming Employment Barriers',
+    date: '2026-01-31',
+    time_text: '7:00–8:30 p.m. MT',
+    format: 'Online via Zoom',
+    speaker: 'Emmanuel Ssembatya, CPA (CEO, NUELS)',
+    eligibility: 'Newcomers settling into life in Canada',
+    description: 'A Zoom session on the Canadian tax system – who must file, key deadlines, deductions and credits – plus practical job search strategies for newcomers. Free admission.',
+    body: `CIASO hosted an important Zoom session designed to support newcomers as they settle into life in Canada. The session introduced participants to the Canadian tax system, including who must file a tax return, key deadlines, and essential tax documents. Attendees also learned the basics of income, deductions, and tax credits, and how filing taxes helps unlock important government benefits.
+
+The session also featured practical job search strategies, offering guidance on navigating the Canadian job market and improving employment opportunities. With step-by-step insights, participants learned how to file taxes correctly, avoid common mistakes, and know what to expect after filing.
+
+## What you’ll learn
+- Overcoming employment barriers
+- Annual filing deadlines and consequences of late or non-filing
+- Common deductions, non-refundable and refundable tax credits
+- Pathway to CPA
+- How to set clear career goals and build a growth mindset for success in Canada
+
+## Event details
+- Date: Saturday, January 31, 2026
+- Time: 7:00 p.m. – 8:30 p.m. MT
+- Format: Online via Zoom
+- Speaker: Emmanuel Ssembatya, CPA – CEO, NUELS
+- Admission: Free
+
+Ideal for newcomers who want to feel informed, confident, and better prepared for both tax season and job searching in Canada.`,
+    details_url: 'https://ciaso.ca/2026/01/25/lesson-summary-zoom-workshop-%f0%9f%87%a8%f0%9f%87%a6/',
+    topics: 'Settle,Work',
+    image: '3952.jpg'
   },
   {
     kind: 'workshop',
@@ -227,7 +260,7 @@ We had a successful workshop, and CIASO is committed to creating more opportunit
     details_url: 'https://ciaso.ca/2025/11/07/breaking-barriers-following-your-career-dreams-2/',
     topics: 'Work,Grow,Belong',
     image: '3896.jpg',
-    gallery: ['3892.jpg', '3925.jpg', '3925-g1.jpg', '3925-g2.jpg', '3925-g3.jpg']
+    gallery: ['3925-p1.jpg', '3925-p2.jpg', '3925-p3.jpg', '3925-p4.jpg', '3925-p5.jpg', '3925-p6.jpg']
   },
   {
     kind: 'workshop',
