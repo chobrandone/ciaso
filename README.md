@@ -108,20 +108,7 @@ Vercel's file system is read-only, so the database must be hosted. **Without `DA
 - Sign up at turso.tech, create a database (e.g. `ciaso`, region close to Alberta such as `aws-us-west-2`).
 - Copy the **Database URL** (`libsql://ciaso-<you>.turso.io`) and create a **token** (Database → Create token).
 
-**2. Load the tables, content and first admin** – once, from your computer, in the project folder. Put these in `.env.local` temporarily (or a separate `.env.production.local`):
-
-```
-DATABASE_URL=libsql://ciaso-<you>.turso.io
-DATABASE_AUTH_TOKEN=<token>
-ADMIN_EMAIL=admin@ciaso.ca
-ADMIN_PASSWORD=<a strong password, 12+ characters>
-```
-
-```bash
-npm run db:setup
-```
-
-Afterwards, switch `.env.local` back to `DATABASE_URL=file:./data/ciaso.db` for local development.
+**2. Content and first admin load automatically.** On its first request the site creates the tables in the empty Turso database and loads all events (with flyers and photos), testimonials and videos from `db/`. It also creates the first admin from `ADMIN_EMAIL` / `ADMIN_PASSWORD` (set them in step 3). This runs once per database; after that, manage everything in `/admin`. (You can still load it from your computer with `npm run db:setup:prod` and a `.env.turso.local` file.)
 
 **3. Environment variables on Vercel** (Project → Settings → Environment Variables, for Production):
 
@@ -129,6 +116,8 @@ Afterwards, switch `.env.local` back to `DATABASE_URL=file:./data/ciaso.db` for 
 |---|---|
 | `DATABASE_URL` | `libsql://ciaso-<you>.turso.io` |
 | `DATABASE_AUTH_TOKEN` | the Turso token |
+| `ADMIN_EMAIL` | `admin@ciaso.ca` (the first admin’s sign-in) |
+| `ADMIN_PASSWORD` | a strong password, 12+ characters (used only to create the first admin) |
 | `AUTH_SECRET` | a long random string (`node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"`) |
 | `SITE_URL` | `https://ciaso.ca` (or your `https://….vercel.app` address until the domain is connected) |
 | `SMTP_HOST` | `smtp.hostinger.com` |

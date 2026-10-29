@@ -2,6 +2,7 @@ import 'server-only';
 import { createClient, type Client, type InValue } from '@libsql/client';
 import { mkdirSync } from 'node:fs';
 import { applySchema } from '../../db/schema.mjs';
+import { seedOnce } from '../../db/seed.mjs';
 
 // DATABASE_* or the TURSO_* names that Vercel's Turso integration adds automatically
 const url = process.env.DATABASE_URL || process.env.TURSO_DATABASE_URL || 'file:./data/ciaso.db';
@@ -33,6 +34,8 @@ function ready(): Promise<void> {
     globalForDb.ciasoSchema = (async () => {
       await client().execute('PRAGMA foreign_keys = ON');
       await applySchema((sql) => client().execute(sql));
+      // A new, empty database (e.g. Turso on Vercel) gets the events, flyers, photos, stories and videos automatically
+      await seedOnce((sql, args = []) => client().execute({ sql, args: args as InValue[] }), { log: (m) => console.log(`[seed] ${m}`) });
     })().catch((err) => {
       globalForDb.ciasoSchema = undefined; // retry on the next request instead of failing forever
       throw err;

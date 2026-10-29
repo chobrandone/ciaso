@@ -12,9 +12,10 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   serverExternalPackages: ['@libsql/client', 'libsql'],
   // libsql loads its platform binary (@libsql/<os>-<arch>) dynamically, so tracing misses it;
-  // bcryptjs is needed by scripts/setup-db.mjs, which runs outside the bundle.
+  // bcryptjs is needed by scripts/setup-db.mjs, which runs outside the bundle;
+  // db/seed-images are read at runtime when the app seeds an empty database.
   outputFileTracingIncludes: {
-    '/**': ['./node_modules/@libsql/**/*', './node_modules/libsql/**/*', './node_modules/bcryptjs/**/*']
+    '/**': ['./node_modules/@libsql/**/*', './node_modules/libsql/**/*', './node_modules/bcryptjs/**/*', './db/seed-images/**/*']
   },
   eslint: { ignoreDuringBuilds: true },
   // Admin uploads event flyers/photos through server actions
