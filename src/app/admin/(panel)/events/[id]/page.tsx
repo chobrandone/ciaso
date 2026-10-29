@@ -11,7 +11,7 @@ export default async function EditEvent({ params, searchParams }: { params: Prom
   const [{ id }, sp] = await Promise.all([params, searchParams]);
   const ev = await queryOne<EventRow>(`SELECT ${EVENT_COLUMNS} FROM events WHERE id = ?`, [Number(id)]);
   if (!ev) notFound();
-  const gallery = await query<{ id: number }>('SELECT id FROM event_images WHERE event_id = ? ORDER BY sort_order, id', [ev.id]);
+  const gallery = await query<{ id: number; caption: string | null }>('SELECT id, caption FROM event_images WHERE event_id = ? ORDER BY sort_order, id', [ev.id]);
   const tab = ev.date < todayEdmonton() ? 'past' : 'current';
   return (
     <>

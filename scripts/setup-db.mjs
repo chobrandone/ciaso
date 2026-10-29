@@ -7,7 +7,7 @@ import { mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { applySchema } from '../db/schema.mjs';
-import { seedContent } from '../db/seed.mjs';
+import { seedContent, seedOnce } from '../db/seed.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const url = process.env.DATABASE_URL || process.env.TURSO_DATABASE_URL || 'file:./data/ciaso.db';
@@ -19,7 +19,6 @@ console.log('✓ Schema ready');
 
 const exec = (sql, args = []) => db.execute({ sql, args });
 const { adminMissing } = await seedContent(exec, { root, resetEvents: process.argv.includes('--reset-events'), log: console.log });
-await exec('CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT)');
-await exec("INSERT OR IGNORE INTO app_meta (key, value) VALUES ('seeded', datetime('now'))");
+await seedOnce(exec, { root, log: console.log }); // one-time steps, e.g. placeholder photos
 db.close();
 if (adminMissing) process.exit(1);

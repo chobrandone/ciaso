@@ -6,6 +6,22 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { events, stories, videos } from './seed-data.mjs';
 
+/** Caption that marks a stand-in photo; uploading real photos for that event replaces them. */
+export const PLACEHOLDER_CAPTION = 'Placeholder – event photos coming soon';
+
+/** Tops every event up to 6 photos with the branded placeholder images. */
+export async function addPlaceholderPhotos(exec, { root = process.cwd(), log = () => {} } = {}) {
+  const { rows } = await exec('SELECT id, (SELECT COUNT(*) FROM event_images g WHERE g.event_id = e.id) AS n, (SELECT COALESCE(MAX(sort_order), -1) FROM event_images g WHERE g.event_id = e.id) AS last FROM events e');
+  const short = rows.filter((r) => Number(r.n) < 6);
+  const images = [1, 2, 3, 4, 5, 6].map((n) => readFileSync(join(root, 'db', 'seed-images', `placeholder-${n}.jpg`)));
+  for (const { id, n, last } of short) {
+    for (const [i, data] of images.slice(0, 6 - Number(n)).entries()) {
+      await exec('INSERT INTO event_images (event_id, data, mime, caption, sort_order) VALUES (?, ?, ?, ?, ?)', [id, data, 'image/jpeg', PLACEHOLDER_CAPTION, Number(last) + 1 + i]);
+    }
+  }
+  log(`✓ placeholder photos: ${short.length} event(s) topped up to 6 photos`);
+}
+
 /**
  * `exec(sql, args)` must return { rows, rowsAffected, lastInsertRowid }.
  * Tables that already contain rows are left alone (unless resetEvents is set).
@@ -68,19 +84,21 @@ export async function seedContent(exec, { root = process.cwd(), resetEvents = fa
  */
 export async function seedOnce(exec, opts) {
   await exec('CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT)');
-  const claim = await exec("INSERT OR IGNORE INTO app_meta (key, value) VALUES ('seeded', datetime('now'))");
-  if (!claim.rowsAffected) {
+  // Each step runs once per database; on failure its marker is released so the next request retries.
+  const once = async (key, fn) => {
+    const claim = await exec("INSERT OR IGNORE INTO app_meta (key, value) VALUES (?, datetime('now'))", [key]);
+    if (!claim.rowsAffected) return false;
+    try { await fn(); } catch (err) { await exec('DELETE FROM app_meta WHERE key = ?', [key]); throw err; }
+    return true;
+  };
+  const seeded = await once('seeded', () => seedContent(exec, opts));
+  if (!seeded) {
     // Content is seeded; still create the first admin if its variables were added later
     const admins = Number((await exec('SELECT COUNT(*) AS n FROM admins')).rows[0].n);
-    if (admins || !process.env.ADMIN_EMAIL || (process.env.ADMIN_PASSWORD ?? '').length < 12) return;
-    await exec('INSERT OR IGNORE INTO admins (email, name, password_hash) VALUES (?, ?, ?)',
-      [process.env.ADMIN_EMAIL, process.env.ADMIN_NAME || 'CIASO Admin', await bcrypt.hash(process.env.ADMIN_PASSWORD, 12)]);
-    return;
+    if (!admins && process.env.ADMIN_EMAIL && (process.env.ADMIN_PASSWORD ?? '').length >= 12) {
+      await exec('INSERT OR IGNORE INTO admins (email, name, password_hash) VALUES (?, ?, ?)',
+        [process.env.ADMIN_EMAIL, process.env.ADMIN_NAME || 'CIASO Admin', await bcrypt.hash(process.env.ADMIN_PASSWORD, 12)]);
+    }
   }
-  try {
-    await seedContent(exec, opts);
-  } catch (err) {
-    await exec("DELETE FROM app_meta WHERE key = 'seeded'"); // let the next request try again
-    throw err;
-  }
+  await once('placeholder-photos-v2', () => addPlaceholderPhotos(exec, opts));
 }

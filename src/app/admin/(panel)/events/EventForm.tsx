@@ -6,12 +6,16 @@ import { ConfirmButton } from '../ui';
 import FormTabs from '../FormTabs';
 import ImagePicker from '../ImagePicker';
 import UploadSizeGuard from '@/components/UploadSizeGuard';
+import { PLACEHOLDER_CAPTION } from '../../../../../db/seed.mjs';
 
 const topicOptions = ['Settle', 'Work', 'Grow', 'Belong', 'Thrive'];
 
-export default function EventForm({ ev, gallery = [], past = false }: { ev?: EventRow; gallery?: { id: number }[]; past?: boolean }) {
+export default function EventForm({ ev, gallery = [], past = false }: { ev?: EventRow; gallery?: { id: number; caption?: string | null }[]; past?: boolean }) {
   const topics = (ev?.topics ?? '').split(',');
-  const free = Math.max(0, MAX_EVENT_PHOTOS - gallery.length);
+  const isPlaceholder = (g: { caption?: string | null }) => g.caption === PLACEHOLDER_CAPTION;
+  const real = gallery.filter((g) => !isPlaceholder(g)).length;
+  // Placeholder images count as free slots: uploading real photos replaces them
+  const free = Math.max(0, MAX_EVENT_PHOTOS - real);
   return (
     <>
       <form action={saveEvent} className="panel admin-form" encType="multipart/form-data">
@@ -23,7 +27,7 @@ export default function EventForm({ ev, gallery = [], past = false }: { ev?: Eve
           </p>
         )}
 
-        <FormTabs tabs={['1. Event details', `2. Flyer & photos (${gallery.length}/${MAX_EVENT_PHOTOS})`, `3. Recap & links${ev?.recap || ev?.recap_body ? ' ✓' : ''}`]}>
+        <FormTabs tabs={['1. Event details', `2. Flyer & photos (${real}/${MAX_EVENT_PHOTOS})`, `3. Recap & links${ev?.recap || ev?.recap_body ? ' ✓' : ''}`]}>
           <>
             <div className="row">
               <div className="field">
@@ -127,15 +131,17 @@ export default function EventForm({ ev, gallery = [], past = false }: { ev?: Eve
                   <li key={g.id}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={`/media/event-images/${g.id}`} alt={`Photo ${i + 1}`} />
+                    {isPlaceholder(g) && <span className="pill pill--muted">Placeholder</span>}
                     <label className="choice"><input type="checkbox" name="remove_photo" value={g.id} />Remove</label>
                   </li>
                 ))}
-                {Array.from({ length: free }, (_, i) => (
+                {Array.from({ length: Math.max(0, MAX_EVENT_PHOTOS - gallery.length) }, (_, i) => (
                   <li key={`empty-${i}`}><span className="photo-slot--empty">Empty slot</span></li>
                 ))}
               </ul>
               <ImagePicker name="gallery" id="gallery" max={free}
                 label={free ? `Add photos (${free} free slot${free > 1 ? 's' : ''})` : 'All 6 slots are used'} />
+              {real < gallery.length && <p className="hint" style={{ margin: 0 }}>This event shows placeholder images for now. Add real photos and the placeholders are removed automatically.</p>}
               {!free && <p className="hint" style={{ margin: 0 }}>To add new photos, tick “Remove” on some, click Save, then add the new ones.</p>}
             </fieldset>
           </>

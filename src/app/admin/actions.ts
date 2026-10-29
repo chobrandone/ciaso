@@ -10,6 +10,7 @@ import { clientIp, rateLimit } from '@/lib/rate-limit';
 import { parseYouTubeId } from '@/lib/youtube';
 import { todayEdmonton } from '@/lib/data';
 import { MAX_EVENT_PHOTOS } from '@/lib/ui';
+import { PLACEHOLDER_CAPTION } from '../../../db/seed.mjs';
 import { getContent } from '@/lib/content';
 import { sections as contentSections, type Field, type SectionId } from '@/lib/content-schema';
 
@@ -128,8 +129,10 @@ export async function saveEvent(fd: FormData) {
   }
 
   // Photos ticked "Remove", and the 6-photo limit per event
-  const keep = id ? await query<{ id: number }>('SELECT id FROM event_images WHERE event_id = ?', [id]) : [];
+  const keep = id ? await query<{ id: number; caption: string | null }>('SELECT id, caption FROM event_images WHERE event_id = ?', [id]) : [];
   const removeIds = fd.getAll('remove_photo').map(Number).filter((n) => keep.some((k) => Number(k.id) === n));
+  // Uploading real photos clears the placeholder images
+  if (photos.length) for (const k of keep) if (k.caption === PLACEHOLDER_CAPTION && !removeIds.includes(Number(k.id))) removeIds.push(Number(k.id));
   if (keep.length - removeIds.length + photos.length > MAX_EVENT_PHOTOS) {
     back(target, { error: `An event can have up to ${MAX_EVENT_PHOTOS} photos. It has ${keep.length - removeIds.length}; you tried to add ${photos.length}. Remove some first.` });
   }
