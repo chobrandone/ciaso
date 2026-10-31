@@ -101,4 +101,25 @@ export async function seedOnce(exec, opts) {
     }
   }
   await once('placeholder-photos-v2', () => addPlaceholderPhotos(exec, opts));
+  await resetAdminPassword(exec, opts);
+}
+
+/**
+ * Recovery: with ADMIN_PASSWORD_RESET=true, sets the ADMIN_EMAIL account's password to ADMIN_PASSWORD
+ * (creating the account if needed) when the site starts. Remove the variable again after signing in.
+ */
+async function resetAdminPassword(exec, { log = () => {} } = {}) {
+  if (String(process.env.ADMIN_PASSWORD_RESET ?? '').trim().toLowerCase() !== 'true') return;
+  const email = (process.env.ADMIN_EMAIL ?? '').trim();
+  const password = (process.env.ADMIN_PASSWORD ?? '').trim();
+  if (!email || password.length < 12) {
+    log('✗ ADMIN_PASSWORD_RESET is on, but ADMIN_EMAIL / ADMIN_PASSWORD (12+ characters) are missing.');
+    return;
+  }
+  const hash = await bcrypt.hash(password, 12);
+  const updated = await exec('UPDATE admins SET password_hash = ? WHERE email = ?', [hash, email]);
+  if (!updated.rowsAffected) {
+    await exec('INSERT INTO admins (email, name, password_hash) VALUES (?, ?, ?)', [email, (process.env.ADMIN_NAME ?? '').trim() || 'CIASO Admin', hash]);
+  }
+  log(`✓ admin password reset for ${email} – remove ADMIN_PASSWORD_RESET now`);
 }
